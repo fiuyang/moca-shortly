@@ -1,0 +1,191 @@
+definitions:
+  entity.JsonBadRequest:
+    properties:
+      code:
+        example: 400
+        type: integer
+      errors:
+        additionalProperties:
+          type: string
+        example:
+          email: email is required
+          username: username is required
+        type: object
+      status:
+        example: BAD REQUEST
+        type: string
+      trace_id:
+        example: dedc5250-5c20-48c9-9383-fac3ccff2679
+        type: string
+    type: object
+  entity.JsonCreated:
+    properties:
+      code:
+        example: 201
+        type: integer
+      data: {}
+      message:
+        example: Created
+        type: string
+      status:
+        example: CREATED
+        type: string
+      trace_id:
+        example: dedc5250-5c20-48c9-9383-fac3ccff2679
+        type: string
+    type: object
+  entity.JsonInternalServerError:
+    properties:
+      code:
+        example: 500
+        type: integer
+      errors:
+        example: error database or third party
+        type: string
+      status:
+        example: INTERNAL SERVER ERROR
+        type: string
+      trace_id:
+        example: dedc5250-5c20-48c9-9383-fac3ccff2679
+        type: string
+    type: object
+  entity.JsonNotFound:
+    properties:
+      code:
+        example: 404
+        type: integer
+      errors:
+        example: record not found
+        type: string
+      status:
+        example: NOT FOUND
+        type: string
+      trace_id:
+        example: dedc5250-5c20-48c9-9383-fac3ccff2679
+        type: string
+    type: object
+  entity.JsonSuccess:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data: {}
+      message:
+        example: Success
+        type: string
+      status:
+        example: OK
+        type: string
+      trace_id:
+        example: dedc5250-5c20-48c9-9383-fac3ccff2679
+        type: string
+    type: object
+  entity.RedirectResponse:
+    properties:
+      original_url:
+        example: https://www.youtube.com/watch?v=sXdIVfeId9E&ab_channel=AsditaPrasetya
+        type: string
+    type: object
+  entity.ShortenURLRequest:
+    properties:
+      expiry:
+        example: "2025-05-12"
+        type: string
+      original_url:
+        example: https://www.youtube.com/watch?v=sXdIVfeId9E&ab_channel=AsditaPrasetya
+        type: string
+    required:
+    - original_url
+    type: object
+  entity.ShortenURLResponse:
+    properties:
+      expiry:
+        example: "2025-05-12T23:59:59Z"
+        type: string
+      short_code:
+        example: C2K7fG
+        type: string
+      short_url:
+        example: http://localhost:3000/api/v1/61PjEp
+        type: string
+    type: object
+info:
+  contact: {}
+  description: A simple URL shortener API built with Go and Fiber framework
+  title: Short URL API
+  version: "1.0"
+paths:
+  /shorten:
+    post:
+      description: Create a short URL from an original URL.
+      parameters:
+      - description: create short URL
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ShortenURLRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Data
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.JsonCreated'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.ShortenURLResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/entity.JsonBadRequest'
+        "404":
+          description: Data not found
+          schema:
+            $ref: '#/definitions/entity.JsonNotFound'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/entity.JsonInternalServerError'
+      summary: Create Short URL
+      tags:
+      - shortener
+  /shorten/{shortCode}:
+    get:
+      description: Fetch the original URL from the short code.
+      parameters:
+      - description: Short Code
+        in: path
+        name: shortCode
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Data
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.JsonSuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.RedirectResponse'
+              type: object
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/entity.JsonBadRequest'
+        "404":
+          description: Data not found
+          schema:
+            $ref: '#/definitions/entity.JsonNotFound'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/entity.JsonInternalServerError'
+      summary: Get Original URL.
+      tags:
+      - shortener
+swagger: "2.0"

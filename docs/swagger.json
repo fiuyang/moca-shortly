@@ -1,0 +1,288 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A simple URL shortener API built with Go and Fiber framework",
+        "title": "Short URL API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "paths": {
+        "/shorten": {
+            "post": {
+                "description": "Create a short URL from an original URL.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shortener"
+                ],
+                "summary": "Create Short URL",
+                "parameters": [
+                    {
+                        "description": "create short URL",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entity.ShortenURLRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Data",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/entity.JsonCreated"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entity.ShortenURLResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.JsonBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Data not found",
+                        "schema": {
+                            "$ref": "#/definitions/entity.JsonNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.JsonInternalServerError"
+                        }
+                    }
+                }
+            }
+        },
+        "/shorten/{shortCode}": {
+            "get": {
+                "description": "Fetch the original URL from the short code.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "shortener"
+                ],
+                "summary": "Get Original URL.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Short Code",
+                        "name": "shortCode",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/entity.JsonSuccess"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/entity.RedirectResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Validation error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.JsonBadRequest"
+                        }
+                    },
+                    "404": {
+                        "description": "Data not found",
+                        "schema": {
+                            "$ref": "#/definitions/entity.JsonNotFound"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/entity.JsonInternalServerError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.JsonBadRequest": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "errors": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "example": {
+                        "email": "email is required",
+                        "username": "username is required"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "example": "BAD REQUEST"
+                },
+                "trace_id": {
+                    "type": "string",
+                    "example": "dedc5250-5c20-48c9-9383-fac3ccff2679"
+                }
+            }
+        },
+        "entity.JsonCreated": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 201
+                },
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "Created"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "CREATED"
+                },
+                "trace_id": {
+                    "type": "string",
+                    "example": "dedc5250-5c20-48c9-9383-fac3ccff2679"
+                }
+            }
+        },
+        "entity.JsonInternalServerError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 500
+                },
+                "errors": {
+                    "type": "string",
+                    "example": "error database or third party"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "INTERNAL SERVER ERROR"
+                },
+                "trace_id": {
+                    "type": "string",
+                    "example": "dedc5250-5c20-48c9-9383-fac3ccff2679"
+                }
+            }
+        },
+        "entity.JsonNotFound": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 404
+                },
+                "errors": {
+                    "type": "string",
+                    "example": "record not found"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "NOT FOUND"
+                },
+                "trace_id": {
+                    "type": "string",
+                    "example": "dedc5250-5c20-48c9-9383-fac3ccff2679"
+                }
+            }
+        },
+        "entity.JsonSuccess": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 200
+                },
+                "data": {},
+                "message": {
+                    "type": "string",
+                    "example": "Success"
+                },
+                "status": {
+                    "type": "string",
+                    "example": "OK"
+                },
+                "trace_id": {
+                    "type": "string",
+                    "example": "dedc5250-5c20-48c9-9383-fac3ccff2679"
+                }
+            }
+        },
+        "entity.RedirectResponse": {
+            "type": "object",
+            "properties": {
+                "original_url": {
+                    "type": "string",
+                    "example": "https://www.youtube.com/watch?v=sXdIVfeId9E\u0026ab_channel=AsditaPrasetya"
+                }
+            }
+        },
+        "entity.ShortenURLRequest": {
+            "type": "object",
+            "required": [
+                "original_url"
+            ],
+            "properties": {
+                "expiry": {
+                    "type": "string",
+                    "example": "2025-05-12"
+                },
+                "original_url": {
+                    "type": "string",
+                    "example": "https://www.youtube.com/watch?v=sXdIVfeId9E\u0026ab_channel=AsditaPrasetya"
+                }
+            }
+        },
+        "entity.ShortenURLResponse": {
+            "type": "object",
+            "properties": {
+                "expiry": {
+                    "type": "string",
+                    "example": "2025-05-12T23:59:59Z"
+                },
+                "short_code": {
+                    "type": "string",
+                    "example": "C2K7fG"
+                },
+                "short_url": {
+                    "type": "string",
+                    "example": "http://localhost:3000/api/v1/61PjEp"
+                }
+            }
+        }
+    }
+}
