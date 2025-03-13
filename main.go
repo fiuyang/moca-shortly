@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/limiter"
 	"scylla/entity"
 	"scylla/handler"
 	"scylla/pkg/config"
@@ -10,6 +11,7 @@ import (
 	"scylla/repository"
 	"scylla/routes"
 	"scylla/service"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -63,6 +65,11 @@ func main() {
 	app.Use(cors.New())
 	app.Use(logger.New(logger.Config{
 		Format: "[${locals:requestid}] ${ip} - ${method} ${status} ${path} - ${latency}\n",
+	}))
+	app.Use(limiter.New(limiter.Config{
+		Max:               30,
+		Expiration:        1 * time.Minute,
+		LimiterMiddleware: limiter.SlidingWindow{},
 	}))
 	app.Mount("/api/v1", routesV1)
 	app.Get("/docs/*", fiberSwagger.WrapHandler)

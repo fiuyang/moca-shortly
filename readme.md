@@ -8,9 +8,10 @@ A simple and efficient URL shortener API built with Go and Fiber framework.
 - 🔄 Automatic redirection from short URLs to the original URLs.
 - 🗄️ PostgresSQL database with GORM ORM.
 - 📖 API documentation with Swagger (OpenAPI).
+- ⏳ Rate Limiting to prevent abuse and ensure fair usage.
 
 # Tech Used
- ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white) ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white) ![Fiber Badge](https://img.shields.io/badge/Fiber-008ECF?logo=fiber&logoColor=fff&style=for-the-badge)
+ ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white) ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white) ![Fiber Badge](https://img.shields.io/badge/Fiber-008ECF?logo=fiber&logoColor=fff&style=for-the-badge) ![RateLimiter Badge](https://img.shields.io/badge/RateLimiter-008ECF?logo=fiber&logoColor=fff&style=for-the-badge)
       
 # Getting Start:
 Before you running the program, make sure you've run this command:
